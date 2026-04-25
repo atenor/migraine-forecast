@@ -15,8 +15,10 @@ export default function LocationPicker({ current, fallbackLabel, onChange }: Pro
   const [query, setQuery]     = useState("");
   const [working, setWorking] = useState<"" | "geo" | "search">("");
   const [error, setError]     = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const popRef   = useRef<HTMLDivElement>(null);
+  const [popTop, setPopTop]   = useState(0);
+  const inputRef   = useRef<HTMLInputElement>(null);
+  const popRef     = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Close on outside click
   useEffect(() => {
@@ -76,11 +78,20 @@ export default function LocationPicker({ current, fallbackLabel, onChange }: Pro
 
   const label = current?.name || fallbackLabel || "Set location";
 
+  const handleToggle = () => {
+    if (!open && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPopTop(rect.bottom + 8);
+    }
+    setOpen(o => !o);
+  };
+
   return (
-    <div ref={popRef} className="relative inline-flex">
+    <div className="relative inline-flex">
       {/* Trigger */}
       <button
-        onClick={() => setOpen(o => !o)}
+        ref={triggerRef}
+        onClick={handleToggle}
         className={`flex items-center gap-1.5 text-[14px] -ml-1 px-1 py-0.5 rounded-md transition-colors
           ${open ? "text-white/85 bg-white/[0.06]" : "text-white/55 hover:text-white/80"}`}
       >
@@ -89,12 +100,14 @@ export default function LocationPicker({ current, fallbackLabel, onChange }: Pro
         <Icon name="chevron-down" size={11} className={`opacity-50 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
-      {/* Popover */}
+      {/* Popover — fixed so it never clips off-screen on mobile */}
       {open && (
         <div
-          className="absolute top-full left-0 mt-2 z-50 w-[280px] rounded-2xl overflow-hidden
+          ref={popRef}
+          className="fixed left-4 right-4 z-50 rounded-2xl overflow-hidden
                      bg-[rgba(8,19,34,0.98)] backdrop-blur-2xl border border-white/10
                      shadow-[0_16px_48px_rgba(0,0,0,0.7)]"
+          style={{ top: popTop }}
         >
           {/* Use my location */}
           <button
@@ -149,3 +162,4 @@ export default function LocationPicker({ current, fallbackLabel, onChange }: Pro
     </div>
   );
 }
+
