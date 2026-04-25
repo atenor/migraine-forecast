@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import RiskGauge from "./RiskGauge";
 import Icon from "./Icon";
 import LocationPicker from "./LocationPicker";
-import { useSettings, type Location } from "@/lib/settings-context";
+import { useSettings } from "@/lib/settings-context";
 import { useNotifications } from "@/lib/use-notifications";
 import { formatPressure, convertTemp, PRESSURE_UNITS, TEMP_UNITS, type PressureUnit, type TempUnit } from "@/lib/units";
 import type { RiskWindow, PersonalSensitivity } from "@/lib/risk";
