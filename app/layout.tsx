@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased min-h-screen overflow-x-hidden`}>
+        <div className="relative w-full overflow-x-hidden">
         <SettingsProvider>
 
           {/* ── Header ── */}
@@ -94,6 +95,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <BottomNav />
 
         </SettingsProvider>
+        </div>
       </body>
     </html>
   );

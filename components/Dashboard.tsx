@@ -264,7 +264,7 @@ export default function Dashboard() {
             The card sits in front of three stacked radial halos so it reads
             as if a soft lamp behind the card is bleeding light around its edges.
           ───────────────────────────────────────────────────────────────── */}
-      <div className="relative">
+      <div className="relative overflow-hidden">
         {/* (1) Wide outer halo — atmospheric bloom */}
         <div
           className="absolute pointer-events-none transition-all duration-1000"
