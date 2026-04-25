@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 import Link from "next/link";
@@ -13,6 +13,12 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", weight: ["30
 export const metadata: Metadata = {
   title: "Migraine Forecast",
   description: "Barometric pressure-aware migraine risk tracker",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
