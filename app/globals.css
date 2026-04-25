@@ -10,6 +10,7 @@ html {
     linear-gradient(160deg, #050d1a 0%, #081322 55%, #060e1c 100%);
   background-attachment: fixed;
   min-height: 100vh;
+  overflow-x: hidden; /* prevent horizontal drift on mobile scroll */
 }
 
 body {
@@ -18,6 +19,7 @@ body {
   background: transparent;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ── Design tokens ── */
