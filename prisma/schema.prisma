@@ -23,6 +23,7 @@ model DailyLog {
   alcohol          Int      @default(0)        // 0=none, 1=1, 2=2-3, 3=4+
   exercise         Boolean  @default(false)
   menstrual        Boolean  @default(false)
+  screenTime       Float    @default(0)        // retained for backward compat; no longer asked in UI
   medications      String   @default("")       // JSON string[]
   prodrome         String   @default("")       // JSON string[] of symptom keys
   notes            String   @default("")
