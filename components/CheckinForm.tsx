@@ -67,7 +67,7 @@ function getSteps(role: CheckinRole, hasMigraine: boolean, migraineMode: boolean
     role === "morning"
       ? ["sleep-quality", "sleep-hours", "stress", "hydration", "caffeine", "alcohol", "exercise", "prodrome", "migraine"]
       : role === "midday"
-      ? ["stress", "hydration", "caffeine", "prodrome", "migraine"]
+      ? ["sleep-quality", "sleep-hours", "stress", "hydration", "caffeine", "prodrome", "migraine"]
       : ["stress", "sleep-quality", "sleep-hours", "hydration", "caffeine", "alcohol", "exercise", "menstrual", "medications", "migraine"];
 
   if (hasMigraine) {
@@ -299,7 +299,7 @@ const SLEEP_OPTS = [
 function StepSleepQuality({ value, role, onChange }: {
   value: number; role: CheckinRole; onChange: (v: number) => void;
 }) {
-  const q = role === "evening" ? "How did you sleep last night?" : "How did you sleep?";
+  const q = role === "morning" ? "How did you sleep?" : "How did you sleep last night?";
   return (
     <>
       <StepHeader q={q} hint="Tap to continue" />
