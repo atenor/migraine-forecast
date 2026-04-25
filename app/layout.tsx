@@ -93,7 +93,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </header>
 
           {/* Page content */}
-          <main className="max-w-2xl mx-auto px-4 pt-24 pb-36 min-h-screen">
+          <main className="w-full max-w-2xl mx-auto px-4 pt-24 pb-36 min-h-screen" style={{ maxWidth: "100vw", boxSizing: "border-box" }}>
             {children}
           </main>
 
