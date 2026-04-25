@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased min-h-screen overflow-x-hidden`}>
-        <div className="relative w-full overflow-x-hidden">
+        <div style={{ overflowX: "clip" }}>
         <SettingsProvider>
 
           {/* ── Header ── */}
