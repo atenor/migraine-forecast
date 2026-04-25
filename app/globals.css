@@ -2,26 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Deep calm background ── */
+html {
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(78, 205, 196, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(168, 158, 201, 0.09) 0%, transparent 55%),
+    linear-gradient(160deg, #050d1a 0%, #081322 55%, #060e1c 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #e8f0f8;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: transparent;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── Design tokens ── */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Glass morphism card */
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-3xl;
   }
+  .glass-sm {
+    @apply bg-white/[0.05] backdrop-blur-lg border border-white/[0.08] rounded-2xl;
+  }
+  /* Legacy alias so existing .card references still work */
+  .card {
+    @apply glass p-6;
+  }
+
+  /* Typography helpers — sized for mobile readability */
+  .calm-title {
+    @apply text-[28px] sm:text-3xl font-semibold tracking-[-0.02em] text-white/95 leading-tight;
+  }
+  .calm-label {
+    @apply text-[13px] font-semibold text-calm-mist uppercase tracking-[0.16em];
+  }
+  .calm-subtitle {
+    @apply text-[15px] sm:text-base text-calm-mist/90 leading-relaxed;
+  }
+  .calm-body {
+    @apply text-[15px] sm:text-base text-white/80 leading-relaxed;
+  }
+
+  /* Evidence badges */
+  .badge-strong {
+    @apply text-[11px] font-medium bg-calm-teal/10 text-calm-teal border border-calm-teal/20 rounded-full px-2.5 py-0.5;
+  }
+  .badge-moderate {
+    @apply text-[11px] font-medium bg-calm-gold/10 text-calm-gold border border-calm-gold/20 rounded-full px-2.5 py-0.5;
+  }
+  .badge-anecdotal {
+    @apply text-[11px] font-medium bg-white/5 text-white/40 border border-white/10 rounded-full px-2.5 py-0.5;
+  }
+
+  /* Pill button */
+  .btn-primary {
+    @apply px-6 py-3 rounded-full font-semibold text-sm text-calm-bg
+           bg-calm-teal hover:bg-[#3bb8b0] transition-all duration-200
+           shadow-[0_0_20px_rgba(78,205,196,0.25)];
+  }
+  .btn-ghost {
+    @apply px-4 py-2 rounded-full text-sm text-calm-mist
+           bg-white/5 hover:bg-white/10 border border-white/10
+           transition-all duration-200;
+  }
+}
+
+/* ── Custom range slider ── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4ecdc4;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.18), 0 2px 8px rgba(0,0,0,0.3);
+  transition: box-shadow 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(78, 205, 196, 0.22), 0 2px 8px rgba(0,0,0,0.3);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4ecdc4;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.18);
+}
+
+/* ── Calm scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+/* ── Date / color-scheme ── */
+input[type="date"] { color-scheme: dark; }
+
+/* ── Glass input ── */
+.calm-input {
+  @apply w-full bg-white/[0.05] border border-white/10 rounded-2xl px-4 py-3
+         text-white/90 text-sm placeholder-white/25
+         focus:outline-none focus:border-calm-teal/50 focus:ring-2 focus:ring-calm-teal/20
+         transition-all duration-200;
 }

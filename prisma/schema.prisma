@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+//  USER LOG MODELS
+// ────────────────────────────────────────────────────────────────────────────
+
+model DailyLog {
+  id               Int      @id @default(autoincrement())
+  date             String   @unique
+  checkinRole      String   @default("")       // morning | midday | evening | migraine
+  sleepHours       Float    @default(7)
+  sleepQuality     Int      @default(3)
+  stressLevel      Int      @default(2)
+  hydration        Int      @default(0)        // 0-8 cups (midday/evening) or 0/1/2 coarse (morning)
+  caffeine         Int      @default(0)        // 0=none, 1=1-2, 3=3+
+  alcohol          Int      @default(0)        // 0=none, 1=1, 2=2-3, 3=4+
+  exercise         Boolean  @default(false)
+  menstrual        Boolean  @default(false)
+  medications      String   @default("")       // JSON string[]
+  prodrome         String   @default("")       // JSON string[] of symptom keys
+  notes            String   @default("")
+  hasMigraine      Boolean  @default(false)
+  migraineSeverity Int      @default(0)
+  migraineDuration Float    @default(0)
+  migraineLocation String   @default("")       // left | right | both | back | wrap
+  reliefMethods    String   @default("")       // JSON string[]
+  reliefRating     Int      @default(0)
+  pressureAtLog    Float    @default(0)
+  createdAt        DateTime @default(now())
+}
+
+model WeatherSnapshot {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  pressureHpa Float
+  tempC       Float
+  humidity    Int
+  condition   String   @default("")
+  lat         Float
+  lon         Float
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+//  EVIDENCE MODELS
+//  Cited primary literature backing the risk algorithm and suggestions.
+//  Seeded by `prisma/seed-evidence.ts`. Surfaced via /api/evidence/*.
+// ────────────────────────────────────────────────────────────────────────────
+
+/// One peer-reviewed paper, guideline, or systematic review.
+model Citation {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique          // stable handle, e.g. "mukamal-2009"
+  authors       String                    // "Mukamal KJ, Wellenius GA, et al."
+  year          Int
+  title         String
+  journal       String
+  pmid          String?                   // PubMed ID
+  doi           String?
+  url           String?                   // canonical URL
+  studyType     String                    // RCT, meta-analysis, cohort, cross-sectional, expert-review, guideline
+  evidenceLevel String                    // A | B | C | U  (per AAN scheme)
+  sampleSize    Int?
+  summary       String                    // 1-2 sentence layperson summary
+  keyFinding    String?                   // numerical detail (NNT, OR, % reduction)
+  createdAt     DateTime @default(now())
+
+  triggerCitations   TriggerCitation[]
+  treatmentCitations TreatmentCitation[]
+}
+
+/// A factor known (with varying confidence) to raise or lower migraine risk.
+model Trigger {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique          // matches lib/risk.ts identifiers
+  name        String                    // user-facing label
+  category    String                    // weather | lifestyle | hormonal | dietary | sensory | behavioral
+  direction   String                    // raises | lowers | bidirectional
+  description String                    // explanation shown in UI
+  weight      Float                     // numeric weight used in lifestyleAdjustment
+  weightCap   Float                     // max points this factor can contribute
+  rationale   String                    // why we picked this weight, with citation slugs
+  createdAt   DateTime @default(now())
+
+  citations TriggerCitation[]
+}
+
+model TriggerCitation {
+  id          Int      @id @default(autoincrement())
+  trigger     Trigger  @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  triggerId   Int
+  citation    Citation @relation(fields: [citationId], references: [id], onDelete: Cascade)
+  citationId  Int
+  effectNote  String                    // specific finding this citation supplies
+
+  @@unique([triggerId, citationId])
+}
+
+/// A treatment, supplement, behavioral therapy, or device intervention.
+model Treatment {
+  id            Int      @id @default(autoincrement())
+  key           String   @unique
+  name          String                  // "Magnesium 600mg"
+  category      String                  // supplement | behavioral | rx_acute | rx_preventive | lifestyle | device
+  type          String                  // preventive | acute
+  description   String
+  dosing        String?                 // "600 mg/day oral"
+  evidenceLevel String                  // A | B | C | U
+  nnt           Float?                  // number-needed-to-treat for ≥50% responder rate
+  cautions      String?                 // safety notes
+  createdAt     DateTime @default(now())
+
+  citations TreatmentCitation[]
+}
+
+model TreatmentCitation {
+  id           Int       @id @default(autoincrement())
+  treatment    Treatment @relation(fields: [treatmentId], references: [id], onDelete: Cascade)
+  treatmentId  Int
+  citation     Citation  @relation(fields: [citationId], references: [id], onDelete: Cascade)
+  citationId   Int
+  effectNote   String
+
+  @@unique([treatmentId, citationId])
+}
