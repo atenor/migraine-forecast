@@ -212,30 +212,26 @@ export default function Dashboard() {
   const timeline = buildTimeline(windows);
   const tomorrow = tomorrowSummary(windows);
   const topSuggestion = suggestions[0];
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const now = new Date();
+  const todayDate = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
   return (
     <div className="flex flex-col gap-7">
 
-      {/* ── Date + Location  ·  Temp + Pressure + Humidity ─────────────── */}
-      <div className="pt-1 flex items-start justify-between gap-4">
-        {/* LEFT — Date stacked above Location (interactive picker) */}
-        <div className="min-w-0 flex flex-col gap-1.5">
-          <p className="calm-label">{today}</p>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <LocationPicker
-              current={location}
-              fallbackLabel="Set your location"
-              onChange={setLocation}
-            />
-            {location && (
-              <span className="text-[13px] text-white/45 truncate">· {current.condition}</span>
-            )}
-          </div>
+      {/* ── Header: Date/Location left · Temp/Weather right ─────────────── */}
+      <div className="pt-1 flex items-center justify-between gap-3">
+        {/* LEFT — location picker · date beneath */}
+        <div className="min-w-0 flex flex-col gap-1">
+          <LocationPicker
+            current={location}
+            fallbackLabel="Set your location"
+            onChange={setLocation}
+          />
+          <p className="text-[12px] text-white/35 tracking-[0.06em] uppercase pl-1">{todayDate}</p>
         </div>
 
-        {/* RIGHT — Temp on top, Pressure · Humidity beneath (both clickable) */}
-        <div className="flex flex-col items-end gap-1.5 shrink-0">
+        {/* RIGHT — temp pill · pressure · humidity · condition */}
+        <div className="flex flex-col items-end gap-1 shrink-0">
           <UnitDropdown
             value={`${convertTemp(current.tempC, tempUnit).toFixed(0)}°${tempUnit}`}
             options={TEMP_UNITS.map(u => ({ value: u.value, label: u.label, symbol: u.symbol }))}
@@ -253,7 +249,13 @@ export default function Dashboard() {
               align="right"
             />
             <span className="text-[12px] text-white/25">·</span>
-            <span className="text-[12px] text-white/55 tabular-nums">{current.humidity}%</span>
+            <span className="text-[12px] text-white/50 tabular-nums">{current.humidity}%</span>
+            {current.condition && (
+              <>
+                <span className="text-[12px] text-white/25">·</span>
+                <span className="text-[12px] text-white/40 truncate max-w-[60px]">{current.condition}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
