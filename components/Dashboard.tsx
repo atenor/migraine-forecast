@@ -265,11 +265,11 @@ export default function Dashboard() {
             as if a soft lamp behind the card is bleeding light around its edges.
           ───────────────────────────────────────────────────────────────── */}
       <div className="relative">
-        {/* (1) Wide outer halo — atmospheric bloom */}
+        {/* (1) Wide outer halo — atmospheric bloom (vertical only to avoid horizontal overflow) */}
         <div
           className="absolute pointer-events-none transition-all duration-1000"
           style={{
-            inset: "-110px",
+            top: "-110px", bottom: "-110px", left: 0, right: 0,
             background: `radial-gradient(ellipse at 50% 50%, ${RISK_HEX[peak.riskLevel]}33 0%, ${RISK_HEX[peak.riskLevel]}11 35%, transparent 70%)`,
             filter: "blur(8px)",
           }}
@@ -278,15 +278,14 @@ export default function Dashboard() {
         <div
           className="absolute pointer-events-none transition-all duration-1000"
           style={{
-            inset: "-50px",
+            top: "-50px", bottom: "-50px", left: 0, right: 0,
             background: `radial-gradient(ellipse at 50% 50%, ${RISK_HEX[peak.riskLevel]}55 0%, ${RISK_HEX[peak.riskLevel]}22 45%, transparent 75%)`,
           }}
         />
-        {/* (3) Tight rim halo — the light hugging the card edges */}
+        {/* (3) Tight rim halo — box-shadow only, no layout bleed */}
         <div
-          className="absolute pointer-events-none rounded-[2rem] transition-all duration-1000"
+          className="absolute inset-0 pointer-events-none rounded-3xl transition-all duration-1000"
           style={{
-            inset: "-14px",
             boxShadow: `0 0 60px 12px ${RISK_HEX[peak.riskLevel]}55, 0 0 120px 24px ${RISK_HEX[peak.riskLevel]}30`,
           }}
         />
@@ -473,11 +472,11 @@ function CheckinInsight({ contributions, delta }: { contributions: CheckinContri
 
   return (
     <div className="relative">
-      {/* Ambient glow — same locked pattern as the hero */}
+      {/* Ambient glow — vertical only to avoid horizontal overflow */}
       <div
         className="absolute pointer-events-none"
         style={{
-          inset: "-20px",
+          top: "-20px", bottom: "-20px", left: 0, right: 0,
           background: `radial-gradient(ellipse at 50% 50%, ${accent}1f 0%, transparent 70%)`,
         }}
       />
