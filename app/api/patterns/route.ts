@@ -21,7 +21,7 @@ export async function GET() {
     {factor:"High Stress",values:logs.map(l=>l.stressLevel)},
     {factor:"Low Hydration",values:logs.map(l=>6-l.hydration)},
     {factor:"High Caffeine",values:logs.map(l=>l.caffeine)},
-    {factor:"High Screen Time",values:logs.map(l=>l.screenTime)},
+    
     {factor:"Menstrual",values:logs.map(l=>l.menstrual?1:0)},
     {factor:"No Exercise",values:logs.map(l=>l.exercise?0:1)},
     {factor:"Low Pressure",values:logs.map(l=>l.pressureAtLog>0?1030-l.pressureAtLog:0)},
